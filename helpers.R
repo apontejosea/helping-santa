@@ -1,3 +1,7 @@
+library(yaml)
+library(ggplot2)
+
+
 #==============================================================
 # Functions
 #==============================================================
@@ -63,16 +67,27 @@ calc_unsanctioned_hours <- function(start, duration) {
 #  m: unsanctioned hours
 #  productivity: p = p' * (1.02)^n * (0.9)^m
 book_elf <- function(elf_toy_lineup) {
-  elf_toy_lineup$p[1]     <- 1
-  elf_toy_lineup$start[1] <- max((9am), elf_toy_lineup$Arrival)
-  elf_toy_lineup$end[1]   <- start + elf_toy_lineup$Duration/p[1]
-  elf_toy_lineup$n[1]     <- 0
-  elf_toy_lineup$m[1]     <- 0
-  for(t in 2:nrow(elf_toy_lineup)) {
-    p[i]  = p[i-1] * (1.02)^n[i-1] * (0.9)^m[i-1]
-    start = max((9am + m[i-1]), toy_arrival)
-    end   = start + duration/p[i]
+  time_9am             <- trunc(elf_toy_lineup$Arrival,'day')+9*60^2
+  elf_toy_lineup$p     <- 1
+  elf_toy_lineup$start <- max(time_9am, elf_toy_lineup$Arrival)
+  elf_toy_lineup$end   <- elf_toy_lineup$start + 
+                            elf_toy_lineup$Duration/elf_toy_lineup$p*60
+  elf_toy_lineup$n     <- 0
+  elf_toy_lineup$m     <- 0
+  for(i in 2:nrow(elf_toy_lineup)) {
+    time_9am            <- trunc(elf_toy_lineup$Arrival[i],'day')+9*60^2
+    elf_toy_lineup$p[i] <- with(elf_toy_lineup[i-1,], p*(1.02)^n*(0.9)^m)
+    elf_toy_lineup$start[i]<- with(elf_toy_lineup,
+                                max((time_9am + m[i-1]), Arrival[i]))
+    elf_toy_lineup$end[i]<- elf_toy_lineup$start[i] + 
+                           elf_toy_lineup$Duration[i]/elf_toy_lineup$p[i]*60
+    elf_toy_lineup$n[i] <- with(elf_toy_lineup[i,], 
+                             calc_sanctioned_hours(start, Duration))
+    elf_toy_lineup$m[i] <- with(elf_toy_lineup[i,], 
+                             calc_unsanctioned_hours(start, Duration))
+
   }
+  elf_toy_lineup
 }
 
 # TODO: Still need to calculate elf productivity & start/end time of each toy
@@ -86,12 +101,30 @@ build_schedule <- function(s, toys) {
       Duration = toys$Duration[toys$ToyId %in% s[[i]]],
       Arrival = toys$Arrival[toys$ToyId %in% s[[i]]])
     temp <- book_elf(temp)
-   
     res  <- rbind(temp, res)
   }
-  res$Start <- NULL
-  for(i in seq_len(nrow(res))) {
-
-  }
   res[order(-as.numeric(res$ElfId), res$ToyId, decreasing=F),]
+}
+
+
+# Overall toy schedule
+plot_toy_schedule <- function(toys)  {
+  p <- ggplot(toys) + 
+    geom_segment(aes(x=ArrivalTime, xend=FinishTime, 
+                     y=ToyId, yend=ToyId)) + 
+    scale_y_reverse()
+  png(file='overall_toy_schedule.png', width=800, 
+      height=600)
+  print(p)
+  dev.off()
+}
+
+# Duration graph
+plot_duration <- function(toys)  {
+  p <- ggplot(toys) + 
+    geom_point(aes(x=ToyId, y=Duration)) +
+   ylab('Duration (hours)')
+  png(file='toy_duration.png', width=800, height=600)
+  print(p)
+  dev.off()
 }
