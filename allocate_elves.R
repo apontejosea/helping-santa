@@ -17,7 +17,7 @@ solution_file_name <- 'initial_solution.yml'
 #=======================================================
 toys     <- read_toys(toys_file_name)
 s0       <- read_solution(solution_file_name)
-build_schedule(s0, toys)
+print(build_schedule(s0, toys))
 
 # plot_duration(toys)
 # plot_toy_schedule(toys)

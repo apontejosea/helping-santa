@@ -47,15 +47,11 @@ diff_days <- function(start, end) {
 calc_sanctioned_hours <- function(start=as.POSIXct('2014-01-01 04:00'), 
                                   duration=25*60) {
   expected_end <- start + duration*60
-  print(paste('We start at:', start))
-  print(paste('We end at:  ', expected_end))
   N(n_hours(expected_end)) - N(n_hours(start)) + diff_days(start, expected_end)*10
 }
 
 calc_unsanctioned_hours <- function(start, duration) {
   expected_end <- start + duration*60
-  print(paste('We start at:', start))
-  print(paste('We end at:  ', expected_end))
   M(n_hours(expected_end)) - M(n_hours(start)) + diff_days(start, expected_end)*14
 }
 
