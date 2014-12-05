@@ -1,16 +1,16 @@
 library(yaml)
 library(ggplot2)
 
-
 #==============================================================
 # Functions
 #==============================================================
+
+
 read_toys <- function(file) {
   toys             <- read.csv(file, as.is=T)
-  toys$Arrival     <- strptime(toys$Arrival, 
-                               '%Y %m %d %H %M')
-  toys$FinishTime  <- toys$Arrival + 
-                        (toys$Duration * 60)
+  names(toys)      <- c('ToyId', 'Arrival', 'Duration')
+  toys$Arrival     <- strptime(toys$Arrival, '%Y %m %d %H %M')
+  toys$FinishTime  <- toys$Arrival + (toys$Duration * 60)
   toys$ElfId       <- 0:(nrow(toys)-1) %% n_elves + 1
   return(toys)
 }
@@ -19,7 +19,30 @@ read_solution <- function(solution_file_name) {
   yaml.load_file(solution_file_name)
 }
 
-# t = hours
+# TODO: This function will write the scheduling solutions to disk
+write_solution <- function(sol) {
+      
+}
+
+
+# Helper function that facilitates the indexing of toys_lineup
+# using a modulus operation
+elf_index <- function(toy_index, n_elves) {
+  ((toy_index - 1) %% n_elves) + 1
+}
+
+# TODO: Very inefficient using lists.
+# Maybe need to rewrite using data.table
+distribute_toys <- function(n_elves, toys) {
+  toys_lineup <- vector("list", n_elves)
+  for(i in seq_len(nrow(toys))) {
+    toys_lineup[[elf_index(i, n_elves)]]  <- 
+      c(toys_lineup[[elf_index(i, n_elves)]], toys$ToyId[i])
+  }
+  toys_lineup
+}
+
+# t = day time in hours (i.e. 7.5 for 7:30 AM, 13.75 for 1:45 PM)
 N <- function(t) {
   stopifnot(t >= 0)
   if(0  <= t & t < 9)   res <- 0
@@ -28,6 +51,7 @@ N <- function(t) {
   res
 }
 
+# t = day time in hours (i.e. 7.5 for 7:30 AM, 13.75 for 1:45 PM)
 M <- function(t) {
   stopifnot(t >= 0)
   if(0  <= t & t < 9)   res <- t
@@ -44,8 +68,7 @@ diff_days <- function(start, end) {
   (as.numeric(trunc(end, 'day')) - as.numeric(trunc(start, 'day')))/60/60/24
 }
 
-calc_sanctioned_hours <- function(start=as.POSIXct('2014-01-01 04:00'), 
-                                  duration=25*60) {
+calc_sanctioned_hours <- function(start, duration) {
   expected_end <- start + duration*60
   N(n_hours(expected_end)) - N(n_hours(start)) + diff_days(start, expected_end)*10
 }
@@ -55,7 +78,7 @@ calc_unsanctioned_hours <- function(start, duration) {
   M(n_hours(expected_end)) - M(n_hours(start)) + diff_days(start, expected_end)*14
 }
 
-# add several columns corresponding to booking elf's
+# This function adds several columns corresponding to booking elf's
 # schedule, considering time constraints & productivity:
 #  start: starting time
 #  end: ending time
@@ -81,12 +104,10 @@ book_elf <- function(elf_toy_lineup) {
                              calc_sanctioned_hours(start, Duration))
     elf_toy_lineup$m[i] <- with(elf_toy_lineup[i,], 
                              calc_unsanctioned_hours(start, Duration))
-
   }
   elf_toy_lineup
 }
 
-# TODO: Still need to calculate elf productivity & start/end time of each toy
 build_schedule <- function(s, toys) {
   res <- NULL
   for(i in seq_along(s)) {
@@ -101,7 +122,6 @@ build_schedule <- function(s, toys) {
   }
   res[order(-as.numeric(res$ElfId), res$ToyId, decreasing=F),]
 }
-
 
 # Overall toy schedule
 plot_toy_schedule <- function(toys)  {
