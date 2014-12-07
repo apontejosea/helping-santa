@@ -9,16 +9,14 @@ source('helpers.R') # all functions are defined here
 # Input
 #=======================================================
 n_elves            <- 5
-toys_file_name     <- 'toys_rev2.csv'
-solution_file_name <- 'initial_solution.yml'
+toys_file_name     <- 'toys_sample.csv'
 
 #=======================================================
 # Steps 
 #=======================================================
-toys     <- read_toys(toys_file_name)
-# s0       <- read_solution(solution_file_name)
-s0       <- distribute_toys(n_elves, toys)
-schedule <- build_schedule(s0, toys)
+system.time(toys     <- read_toys(toys_file_name))
+system.time(toys     <- distribute_toys(5, toys))
+system.time(toys     <- build_schedule(toys))
 
 # Uncomment to generate graphs
 # plot_duration(toys)
