@@ -1,4 +1,5 @@
 source('helpers.R') # all functions are defined here
+source('graphs.R')
 
 ########################################################
 ##  To run, just source this file in R:
@@ -19,5 +20,5 @@ system.time(toys     <- distribute_toys(5, toys))
 system.time(toys     <- build_schedule(toys))
 
 # Uncomment to generate graphs
-# plot_duration(toys)
-# plot_toy_schedule(toys)
+plot_duration(toys)
+plot_toy_schedule(toys)
