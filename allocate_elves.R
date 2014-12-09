@@ -10,7 +10,7 @@ source('graphs.R')
 # Input
 #=======================================================
 n_elves            <- 50
-n_toys             <- n_elves*10
+n_toys             <- n_elves*100
 toys_file_name     <- 'toys_rev2.csv'
 
 #=======================================================
@@ -22,5 +22,5 @@ system.time(schedule <- build_schedule2(toys))
 # system.time(schedule <- build_schedule(toys))
 
 # Uncomment to generate graphs
-plot_duration(toys)
-plot_toy_schedule(toys)
+plot_duration(schedule)
+plot_toy_schedule(schedule)

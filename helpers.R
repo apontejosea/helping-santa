@@ -142,17 +142,15 @@ book_elf3 <- function(Arrival, Duration) {
   res$p[1]    <- 1
   res$start[1]<- max(date_9am(Arrival[1]), Arrival[1])
   res$end[1]  <- res$start[1] + Duration[1]/res$p[1]*60
-  res$n[1]    <- calc_sanctioned_hours(res$start[1], 
-                                       Duration[1])
-  res$m[1]    <- calc_unsanctioned_hours(res$start[1], 
-                                         Duration[1])
+  res$n[1]    <- calc_sanctioned_hours(res$start[1], Duration[1])
+  res$m[1]    <- calc_unsanctioned_hours(res$start[1], Duration[1])
   for(i in 2:nrow(res)) {
     res$p[i]    <- calc_p(res$p[i-1], 
                           res$n[i-1], res$m[i-1])
     res$start[i]<- max(c((date_9am(Arrival[i]) + 
                           res$m[i-1]), Arrival[i], 
                          res$end[i-1]))
-    res$end[i]  <- res$start[i] + res$Duration[i]/res$p[i]*60
+    res$end[i]  <- res$start[i] + Duration[i]/res$p[i]*60
     res$n[i]    <- calc_sanctioned_hours(res$start[i], Duration[i])
     res$m[i]    <- calc_unsanctioned_hours(res$start[i], Duration[i])
   }

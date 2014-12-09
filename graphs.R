@@ -1,8 +1,10 @@
+theme_set(theme_linedraw(12))
+
 # Overall toy schedule
 plot_toy_schedule <- function(toys)  {
   p <- ggplot(toys) + 
     geom_segment(aes(x=start, xend=end, 
-                     y=ToyId, yend=ToyId)) + 
+                     y=ToyId, yend=ToyId, color=ElfId)) + 
     scale_y_reverse()
   png(file='overall_toy_schedule.png', width=800, 
       height=600)
