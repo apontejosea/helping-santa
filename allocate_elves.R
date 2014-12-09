@@ -18,8 +18,8 @@ toys_file_name     <- 'toys_rev2.csv'
 #=======================================================
 system.time(toys     <- read_toys(toys_file_name, nrows=n_toys))
 system.time(toys     <- distribute_toys(n_elves, toys))
-system.time(toys     <- build_schedule2(toys))
-system.time(toys     <- build_schedule(toys))
+system.time(schedule <- build_schedule2(toys))
+# system.time(schedule <- build_schedule(toys))
 
 # Uncomment to generate graphs
 plot_duration(toys)

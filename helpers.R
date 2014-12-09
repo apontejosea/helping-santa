@@ -3,12 +3,15 @@ library(plyr)
 library(ggplot2)
 library(lubridate)
 library(data.table)
+# library(doSNOW)
+
 
 #==============================================================
 # Environment Options
 #==============================================================
 
 Sys.setenv(TZ="UTC")
+# registerDoSNOW(makeCluster(4, type = "SOCK"))
 
 #==============================================================
 # Functions
@@ -91,12 +94,14 @@ book_elf <- function(Arrival, Duration) {
                                m=numeric(len))
   res[1, p:=1]
   res[1, start:=max(date_9am(Arrival[1]), Arrival[1])]
-  res[1, end:=start + Duration[1]/p*60]
+  res[1, end:=start + Duration[1]/p[1]*60]
   res[1, n:=calc_sanctioned_hours(start, Duration[1])]
   res[1, m:=calc_unsanctioned_hours(start, Duration[1])]
   for(i in 2:nrow(res)) {
     res[i, p:=calc_p(res[i-1, p], res[i-1, n], res[i-1, m])]
-    res[i, start:=as.POSIXct(max(c((date_9am(Arrival[i]) + res[i-1, m]), Arrival[i], res[i-1, end])))]
+    res[i, start:=
+        as.POSIXct(max(c((date_9am(Arrival[i]) + res[i-1, m]), 
+                         Arrival[i], res[i-1, end])))]
     res[i, end:=start + Duration[i]/p*60]
     res[i, n:=calc_sanctioned_hours(start, Duration[i])]
     res[i, m:=calc_unsanctioned_hours(start, Duration[i])]
@@ -127,20 +132,26 @@ book_elf2 <- function(Arrival, Duration) {
 }
 
 book_elf3 <- function(Arrival, Duration) {
-  len            <- length(Arrival)
-  res            <- data.frame(p=numeric(len),
-                               start=.POSIXct(numeric(len)),
-                               end=.POSIXct(numeric(len)),
-                               n=numeric(len),
-                               m=numeric(len))
-  res$p[1]       <- 1
-  res$start[1]   <- max(date_9am(Arrival[1]), Arrival[1])
-  res$end[1]     <- with(res[1,], start + Duration/p*60)
-  res$n[1]       <- calc_sanctioned_hours(start, Duration[1])
-  res$m[1]       <- calc_unsanctioned_hours(start, Duration[1])
+  len         <- length(Arrival)
+  res         <- data.frame(
+                    p=numeric(len),
+                    start=.POSIXct(numeric(len)),
+                    end=.POSIXct(numeric(len)),
+                    n=numeric(len),
+                    m=numeric(len))
+  res$p[1]    <- 1
+  res$start[1]<- max(date_9am(Arrival[1]), Arrival[1])
+  res$end[1]  <- res$start[1] + Duration[1]/res$p[1]*60
+  res$n[1]    <- calc_sanctioned_hours(res$start[1], 
+                                       Duration[1])
+  res$m[1]    <- calc_unsanctioned_hours(res$start[1], 
+                                         Duration[1])
   for(i in 2:nrow(res)) {
-    res$p[i]    <- with(res[i-1,], calc_p(p, n, m))
-    res$start[i]<- with(res, max(c((date_9am(Arrival[i]) + m[i-1]), Arrival[i], end[i-1])))
+    res$p[i]    <- calc_p(res$p[i-1], 
+                          res$n[i-1], res$m[i-1])
+    res$start[i]<- max(c((date_9am(Arrival[i]) + 
+                          res$m[i-1]), Arrival[i], 
+                         res$end[i-1]))
     res$end[i]  <- res$start[i] + res$Duration[i]/res$p[i]*60
     res$n[i]    <- calc_sanctioned_hours(res$start[i], Duration[i])
     res$m[i]    <- calc_unsanctioned_hours(res$start[i], Duration[i])
@@ -149,16 +160,18 @@ book_elf3 <- function(Arrival, Duration) {
 }
 
 build_schedule <- function(toys) {
-  toys[,c('p',
-          'start','end',
-          'n','m'):=book_elf(Arrival, Duration), by=ElfId]
+  toys[,c('p','start','end','n','m'):=
+       book_elf(Arrival, Duration), by=ElfId]
   setorder(toys, ElfId, start)
   toys
 }
 
 build_schedule2 <- function(toys) {
-  res <- ddply(toys, .(ElfId), function(X) book_elf(X$Arrival, X$Duration))
-  # still need to set order
+  res <- ddply(toys, .(ElfId),
+               function(X) book_elf3(X$Arrival, X$Duration))
+  # res <- ddply(toys, .(ElfId),
+  #              function(X) book_elf3(X$Arrival, X$Duration), .parallel=T)
+  res <- cbind(toys, res[,-1])
+  # res[order(res$ElfId, res$start),]
   res
 }
-
