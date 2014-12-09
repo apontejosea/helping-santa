@@ -9,14 +9,16 @@ source('graphs.R')
 #=======================================================
 # Input
 #=======================================================
-n_elves            <- 5
-toys_file_name     <- 'toys_sample.csv'
+n_elves            <- 50
+n_toys             <- n_elves*10
+toys_file_name     <- 'toys_rev2.csv'
 
 #=======================================================
-# Steps 
+# Steps
 #=======================================================
-system.time(toys     <- read_toys(toys_file_name))
-system.time(toys     <- distribute_toys(5, toys))
+system.time(toys     <- read_toys(toys_file_name, nrows=n_toys))
+system.time(toys     <- distribute_toys(n_elves, toys))
+system.time(toys     <- build_schedule2(toys))
 system.time(toys     <- build_schedule(toys))
 
 # Uncomment to generate graphs

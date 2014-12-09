@@ -1,7 +1,6 @@
 library(yaml)
 library(plyr)
 library(ggplot2)
-library(fasttime)
 library(lubridate)
 library(data.table)
 
@@ -24,8 +23,8 @@ write_solution <- function(sol) {
       
 }
 
-read_toys <- function(file) {
-  toys <- fread(file, colClasses=c('integer', 'myDate', 'integer'))
+read_toys <- function(file, ...) {
+  toys <- fread(file, colClasses=c('integer', 'myDate', 'integer'), ...)
   setnames(toys, names(toys)[2], 'Arrival')
   toys[ , Arrival:=parse_date_time2(toys$Arrival, '%Y %m %d %H %M')]
   setorder(toys, Duration)
@@ -84,11 +83,61 @@ date_9am <- function(dtime) { trunc(dtime,'day')+9*60^2 }
 #  m: unsanctioned hours
 #  productivity: p = p' * (1.02)^n * (0.9)^m
 book_elf <- function(Arrival, Duration) {
-  res       <- data.frame(p=rep(1, length(Arrival)))
-  res$start <- max(date_9am(Arrival[1]), Arrival[1])
-  res$end   <- with(res[1,], start + Duration/p*60)
-  res$n     <- 0
-  res$m     <- 0
+  len            <- length(Arrival)
+  res            <- data.table(p=numeric(len),
+                               start=.POSIXct(numeric(len)),
+                               end=.POSIXct(numeric(len)),
+                               n=numeric(len),
+                               m=numeric(len))
+  res[1, p:=1]
+  res[1, start:=max(date_9am(Arrival[1]), Arrival[1])]
+  res[1, end:=start + Duration[1]/p*60]
+  res[1, n:=calc_sanctioned_hours(start, Duration[1])]
+  res[1, m:=calc_unsanctioned_hours(start, Duration[1])]
+  for(i in 2:nrow(res)) {
+    res[i, p:=calc_p(res[i-1, p], res[i-1, n], res[i-1, m])]
+    res[i, start:=as.POSIXct(max(c((date_9am(Arrival[i]) + res[i-1, m]), Arrival[i], res[i-1, end])))]
+    res[i, end:=start + Duration[i]/p*60]
+    res[i, n:=calc_sanctioned_hours(start, Duration[i])]
+    res[i, m:=calc_unsanctioned_hours(start, Duration[i])]
+  }
+  res
+}
+
+book_elf2 <- function(Arrival, Duration) {
+  len            <- length(Arrival)
+  res            <- data.table(p=numeric(len),
+                               start=.POSIXct(numeric(len)),
+                               end=.POSIXct(numeric(len)),
+                               n=numeric(len),
+                               m=numeric(len))
+  res$p[1]       <- 1
+  res$start[1]   <- max(date_9am(Arrival[1]), Arrival[1])
+  res$end[1]     <- with(res[1,], start + Duration/p*60)
+  res$n[1]       <- calc_sanctioned_hours(start, Duration[1])
+  res$m[1]       <- calc_unsanctioned_hours(start, Duration[1])
+  for(i in 2:nrow(res)) {
+    res$p[i]    <- with(res[i-1,], calc_p(p, n, m))
+    res$start[i]<- with(res, max(c((date_9am(Arrival[i]) + m[i-1]), Arrival[i], end[i-1])))
+    res$end[i]  <- res$start[i] + res$Duration[i]/res$p[i]*60
+    res$n[i]    <- calc_sanctioned_hours(res$start[i], Duration[i])
+    res$m[i]    <- calc_unsanctioned_hours(res$start[i], Duration[i])
+  }
+  res
+}
+
+book_elf3 <- function(Arrival, Duration) {
+  len            <- length(Arrival)
+  res            <- data.frame(p=numeric(len),
+                               start=.POSIXct(numeric(len)),
+                               end=.POSIXct(numeric(len)),
+                               n=numeric(len),
+                               m=numeric(len))
+  res$p[1]       <- 1
+  res$start[1]   <- max(date_9am(Arrival[1]), Arrival[1])
+  res$end[1]     <- with(res[1,], start + Duration/p*60)
+  res$n[1]       <- calc_sanctioned_hours(start, Duration[1])
+  res$m[1]       <- calc_unsanctioned_hours(start, Duration[1])
   for(i in 2:nrow(res)) {
     res$p[i]    <- with(res[i-1,], calc_p(p, n, m))
     res$start[i]<- with(res, max(c((date_9am(Arrival[i]) + m[i-1]), Arrival[i], end[i-1])))
@@ -100,8 +149,16 @@ book_elf <- function(Arrival, Duration) {
 }
 
 build_schedule <- function(toys) {
-  toys[ , c('p','start','end','n','m'):=book_elf(Arrival, Duration), 
-       by=ElfId]
+  toys[,c('p',
+          'start','end',
+          'n','m'):=book_elf(Arrival, Duration), by=ElfId]
   setorder(toys, ElfId, start)
   toys
 }
+
+build_schedule2 <- function(toys) {
+  res <- ddply(toys, .(ElfId), function(X) book_elf(X$Arrival, X$Duration))
+  # still need to set order
+  res
+}
+
