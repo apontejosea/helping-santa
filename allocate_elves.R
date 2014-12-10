@@ -9,8 +9,8 @@ source('graphs.R')
 #=======================================================
 # Input
 #=======================================================
-n_elves            <- 50
-n_toys             <- n_elves*100
+n_elves            <- 6
+n_toys             <- n_elves*200
 toys_file_name     <- 'toys_rev2.csv'
 
 #=======================================================
@@ -19,8 +19,10 @@ toys_file_name     <- 'toys_rev2.csv'
 system.time(toys     <- read_toys(toys_file_name, nrows=n_toys))
 system.time(toys     <- distribute_toys(n_elves, toys))
 system.time(schedule <- build_schedule2(toys))
-# system.time(schedule <- build_schedule(toys))
+
 
 # Uncomment to generate graphs
 plot_duration(schedule)
 plot_toy_schedule(schedule)
+plot_elf_schedule(schedule)
+plot_elf_p_trend(schedule)
