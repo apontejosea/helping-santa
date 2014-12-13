@@ -1,0 +1,3 @@
+useDynLib(elves7)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
