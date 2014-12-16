@@ -5,87 +5,147 @@
 
 using namespace Rcpp;
 
-// computeN
-double computeN(double t);
-RcppExport SEXP elves_computeN(SEXP tSEXP) {
+// CalculateN
+double CalculateN(double t);
+RcppExport SEXP elves_temp_CalculateN(SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        double __result = computeN(t);
+        double __result = CalculateN(t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// computeM
-double computeM(double t);
-RcppExport SEXP elves_computeM(SEXP tSEXP) {
+// CalculateM
+double CalculateM(double t);
+RcppExport SEXP elves_temp_CalculateM(SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        double __result = computeM(t);
+        double __result = CalculateM(t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// diff_days
-double diff_days(Datetime start, Datetime end);
-RcppExport SEXP elves_diff_days(SEXP startSEXP, SEXP endSEXP) {
+// DateTimeAt900
+Datetime DateTimeAt900(Datetime date_time);
+RcppExport SEXP elves_temp_DateTimeAt900(SEXP date_timeSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type date_time(date_timeSEXP );
+        Datetime __result = DateTimeAt900(date_time);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// DateTimeNext900
+Datetime DateTimeNext900(Datetime dtime);
+RcppExport SEXP elves_temp_DateTimeNext900(SEXP dtimeSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type dtime(dtimeSEXP );
+        Datetime __result = DateTimeNext900(dtime);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// DateTimeAt1900
+Datetime DateTimeAt1900(Datetime date_time);
+RcppExport SEXP elves_temp_DateTimeAt1900(SEXP date_timeSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type date_time(date_timeSEXP );
+        Datetime __result = DateTimeAt1900(date_time);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// CalculateDaysDifference
+double CalculateDaysDifference(Datetime start, Datetime end);
+RcppExport SEXP elves_temp_CalculateDaysDifference(SEXP startSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< Datetime >::type start(startSEXP );
         Rcpp::traits::input_parameter< Datetime >::type end(endSEXP );
-        double __result = diff_days(start, end);
+        double __result = CalculateDaysDifference(start, end);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// calc_sanctioned_hours
-double calc_sanctioned_hours(Datetime start, double duration);
-RcppExport SEXP elves_calc_sanctioned_hours(SEXP startSEXP, SEXP durationSEXP) {
+// CalcHours
+double CalcHours(Datetime date_time);
+RcppExport SEXP elves_temp_CalcHours(SEXP date_timeSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type date_time(date_timeSEXP );
+        double __result = CalcHours(date_time);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// CalculateSanctionedHours
+double CalculateSanctionedHours(Datetime start, double duration);
+RcppExport SEXP elves_temp_CalculateSanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< Datetime >::type start(startSEXP );
         Rcpp::traits::input_parameter< double >::type duration(durationSEXP );
-        double __result = calc_sanctioned_hours(start, duration);
+        double __result = CalculateSanctionedHours(start, duration);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// calc_unsanctioned_hours
-double calc_unsanctioned_hours(Datetime start, double duration);
-RcppExport SEXP elves_calc_unsanctioned_hours(SEXP startSEXP, SEXP durationSEXP) {
+// CalculateUnsanctionedHours
+double CalculateUnsanctionedHours(Datetime start, double duration);
+RcppExport SEXP elves_temp_CalculateUnsanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< Datetime >::type start(startSEXP );
         Rcpp::traits::input_parameter< double >::type duration(durationSEXP );
-        double __result = calc_unsanctioned_hours(start, duration);
+        double __result = CalculateUnsanctionedHours(start, duration);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// calc_p
-double calc_p(double p0, double n, double m);
-RcppExport SEXP elves_calc_p(SEXP p0SEXP, SEXP nSEXP, SEXP mSEXP) {
+// CalculateP
+double CalculateP(double p0, double n, double m);
+RcppExport SEXP elves_temp_CalculateP(SEXP p0SEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -93,58 +153,109 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< double >::type p0(p0SEXP );
         Rcpp::traits::input_parameter< double >::type n(nSEXP );
         Rcpp::traits::input_parameter< double >::type m(mSEXP );
-        double __result = calc_p(p0, n, m);
+        double __result = CalculateP(p0, n, m);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// next_9am
-Datetime next_9am(Datetime dtime);
-RcppExport SEXP elves_next_9am(SEXP dtimeSEXP) {
+// PickStart
+Datetime PickStart(Datetime earliest_start, int duration, double productivity, double threshold);
+RcppExport SEXP elves_temp_PickStart(SEXP earliest_startSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Datetime >::type dtime(dtimeSEXP );
-        Datetime __result = next_9am(dtime);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// pickStart
-Datetime pickStart(Datetime previousEnd, double previousM, int duration, double productivity, double threshold);
-RcppExport SEXP elves_pickStart(SEXP previousEndSEXP, SEXP previousMSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Datetime >::type previousEnd(previousEndSEXP );
-        Rcpp::traits::input_parameter< double >::type previousM(previousMSEXP );
+        Rcpp::traits::input_parameter< Datetime >::type earliest_start(earliest_startSEXP );
         Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
         Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
         Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        Datetime __result = pickStart(previousEnd, previousM, duration, productivity, threshold);
+        Datetime __result = PickStart(earliest_start, duration, productivity, threshold);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// book_elf_c
-DataFrame book_elf_c(DatetimeVector& theArrival, NumericVector& theDuration, double threshold);
-RcppExport SEXP elves_book_elf_c(SEXP theArrivalSEXP, SEXP theDurationSEXP, SEXP thresholdSEXP) {
+// NextSanctionedDateTime
+Datetime NextSanctionedDateTime(Datetime date_time);
+RcppExport SEXP elves_temp_NextSanctionedDateTime(SEXP date_timeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< DatetimeVector& >::type theArrival(theArrivalSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type theDuration(theDurationSEXP );
+        Rcpp::traits::input_parameter< Datetime >::type date_time(date_timeSEXP );
+        Datetime __result = NextSanctionedDateTime(date_time);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// CalculateDateTimeAfterResting
+Datetime CalculateDateTimeAfterResting(Datetime previous_end, double rest_period);
+RcppExport SEXP elves_temp_CalculateDateTimeAfterResting(SEXP previous_endSEXP, SEXP rest_periodSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type previous_end(previous_endSEXP );
+        Rcpp::traits::input_parameter< double >::type rest_period(rest_periodSEXP );
+        Datetime __result = CalculateDateTimeAfterResting(previous_end, rest_period);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// PickStart5
+Datetime PickStart5(Datetime previous_start, Datetime previous_end, int duration, double productivity, double threshold);
+RcppExport SEXP elves_temp_PickStart5(SEXP previous_startSEXP, SEXP previous_endSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type previous_start(previous_startSEXP );
+        Rcpp::traits::input_parameter< Datetime >::type previous_end(previous_endSEXP );
+        Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
+        Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
         Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        DataFrame __result = book_elf_c(theArrival, theDuration, threshold);
+        Datetime __result = PickStart5(previous_start, previous_end, duration, productivity, threshold);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// BookElf5
+DataFrame BookElf5(DatetimeVector& arrival, NumericVector& duration, double threshold);
+RcppExport SEXP elves_temp_BookElf5(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< DatetimeVector& >::type arrival(arrivalSEXP );
+        Rcpp::traits::input_parameter< NumericVector& >::type duration(durationSEXP );
+        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
+        DataFrame __result = BookElf5(arrival, duration, threshold);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// BookElf
+DataFrame BookElf(DatetimeVector& arrival, NumericVector& duration, double threshold);
+RcppExport SEXP elves_temp_BookElf(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< DatetimeVector& >::type arrival(arrivalSEXP );
+        Rcpp::traits::input_parameter< NumericVector& >::type duration(durationSEXP );
+        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
+        DataFrame __result = BookElf(arrival, duration, threshold);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

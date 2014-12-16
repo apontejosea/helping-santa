@@ -83,6 +83,15 @@ build_schedule_c <- function(toys, threshold=0, .parallel=FALSE) {
 #   res
 # }
 
+# EndOfWorkDay <- function(date_time) {
+#   trunc(date_time, 'day') + 19*60*60
+# }
+# 
+# BegOfWorkDay <- function(date_time) {
+#   trunc(date_time, 'day') + 9*60*60
+# }
+# 
+# 
 # n_hours <- function(date_time) {
 #   (as.numeric(date_time)-as.numeric(trunc(date_time, 'day')))/60/60
 # }
@@ -122,12 +131,12 @@ build_schedule_c <- function(toys, threshold=0, .parallel=FALSE) {
 # pick_start <- function(earliest_start, duration, productivity, threshold) {
 #   s_e <- earliest_start
 #   s_a <- max(s_e, next_9am(s_e))
-#   n_a <- calc_sanctioned_hours(s_a, duration)
-#   m_a <- calc_unsanctioned_hours(s_a, duration)
-#   p_a <- calc_p(productivity, n_a, m_a)
 #   n_e <- calc_sanctioned_hours(s_e, duration)
+#   n_a <- calc_sanctioned_hours(s_a, duration)
 #   m_e <- calc_unsanctioned_hours(s_e, duration)
+#   m_a <- calc_unsanctioned_hours(s_a, duration)
 #   p_e <- calc_p(productivity, n_e, m_e)
+#   p_a <- calc_p(productivity, n_a, m_a)
 #   advantage_index <- (p_a - p_e)*(s_a - s_e)
 #   if(advantage_index > threshold)  { s_a }
 #   else  { s_e }

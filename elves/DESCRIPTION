@@ -1,11 +1,11 @@
 Package: elves
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
-Date: 2014-12-12
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: More about what it does (maybe more than one line)
+Title: Elves helping Santa all the way!
+Version: 1.1
+Date: 2014-12-16
+Author: Jose A. Aponte, Yara B. Luis
+Maintainer: Jose A. Aponte <jose.aponte@pragmaanalytics.com>
+Description: Elves helping Santa all the way!
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.11.3)
 Depends: data.table, lubridate, doSNOW
