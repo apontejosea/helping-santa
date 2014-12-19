@@ -50,12 +50,26 @@ createCluster  <-  function(logfile = "/dev/null", export = NULL, lib = NULL) {
   return(cl)
 }
 
+build_schedule_4 <- function(toys, threshold=0, .parallel=FALSE) {
+  require(plyr)
+  cl  <- createCluster(lib=list('Rcpp'))
+  res <- ddply(toys, .(ElfId), 
+               .fun=function(X) { 
+                 BookElf4(X$Arrival, X$Duration, threshold=threshold) 
+               }, 
+               .parallel=.parallel)
+  stopCluster(cl)
+  res <- cbind(toys, res[,-1])
+  res[order(res$ElfId, res$start),]
+  res
+}
+
 build_schedule_c <- function(toys, threshold=0, .parallel=FALSE) {
   require(plyr)
   cl  <- createCluster(lib=list('Rcpp'))
   res <- ddply(toys, .(ElfId), 
                .fun=function(X) { 
-                 book_elf_c(X$Arrival, X$Duration, threshold=threshold) 
+                 BookElf5(X$Arrival, X$Duration, threshold=threshold) 
                }, 
                .parallel=.parallel)
   stopCluster(cl)

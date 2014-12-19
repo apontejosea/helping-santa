@@ -2,66 +2,74 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CalculateN <- function(t) {
-    .Call('elves_temp_CalculateN', PACKAGE = 'elves_temp', t)
+    .Call('elves_CalculateN', PACKAGE = 'elves', t)
 }
 
 CalculateM <- function(t) {
-    .Call('elves_temp_CalculateM', PACKAGE = 'elves_temp', t)
+    .Call('elves_CalculateM', PACKAGE = 'elves', t)
 }
 
 DateTimeAt900 <- function(date_time) {
-    .Call('elves_temp_DateTimeAt900', PACKAGE = 'elves_temp', date_time)
+    .Call('elves_DateTimeAt900', PACKAGE = 'elves', date_time)
 }
 
 DateTimeNext900 <- function(dtime) {
-    .Call('elves_temp_DateTimeNext900', PACKAGE = 'elves_temp', dtime)
+    .Call('elves_DateTimeNext900', PACKAGE = 'elves', dtime)
 }
 
 DateTimeAt1900 <- function(date_time) {
-    .Call('elves_temp_DateTimeAt1900', PACKAGE = 'elves_temp', date_time)
+    .Call('elves_DateTimeAt1900', PACKAGE = 'elves', date_time)
 }
 
 CalculateDaysDifference <- function(start, end) {
-    .Call('elves_temp_CalculateDaysDifference', PACKAGE = 'elves_temp', start, end)
+    .Call('elves_CalculateDaysDifference', PACKAGE = 'elves', start, end)
 }
 
 CalcHours <- function(date_time) {
-    .Call('elves_temp_CalcHours', PACKAGE = 'elves_temp', date_time)
+    .Call('elves_CalcHours', PACKAGE = 'elves', date_time)
 }
 
 CalculateSanctionedHours <- function(start, duration) {
-    .Call('elves_temp_CalculateSanctionedHours', PACKAGE = 'elves_temp', start, duration)
+    .Call('elves_CalculateSanctionedHours', PACKAGE = 'elves', start, duration)
 }
 
 CalculateUnsanctionedHours <- function(start, duration) {
-    .Call('elves_temp_CalculateUnsanctionedHours', PACKAGE = 'elves_temp', start, duration)
+    .Call('elves_CalculateUnsanctionedHours', PACKAGE = 'elves', start, duration)
 }
 
 CalculateP <- function(p0, n, m) {
-    .Call('elves_temp_CalculateP', PACKAGE = 'elves_temp', p0, n, m)
+    .Call('elves_CalculateP', PACKAGE = 'elves', p0, n, m)
 }
 
 PickStart <- function(earliest_start, duration, productivity, threshold) {
-    .Call('elves_temp_PickStart', PACKAGE = 'elves_temp', earliest_start, duration, productivity, threshold)
+    .Call('elves_PickStart', PACKAGE = 'elves', earliest_start, duration, productivity, threshold)
 }
 
 NextSanctionedDateTime <- function(date_time) {
-    .Call('elves_temp_NextSanctionedDateTime', PACKAGE = 'elves_temp', date_time)
+    .Call('elves_NextSanctionedDateTime', PACKAGE = 'elves', date_time)
 }
 
 CalculateDateTimeAfterResting <- function(previous_end, rest_period) {
-    .Call('elves_temp_CalculateDateTimeAfterResting', PACKAGE = 'elves_temp', previous_end, rest_period)
+    .Call('elves_CalculateDateTimeAfterResting', PACKAGE = 'elves', previous_end, rest_period)
+}
+
+pickStart4 <- function(previousStart, previousEnd, duration, productivity, threshold) {
+    .Call('elves_pickStart4', PACKAGE = 'elves', previousStart, previousEnd, duration, productivity, threshold)
 }
 
 PickStart5 <- function(previous_start, previous_end, duration, productivity, threshold) {
-    .Call('elves_temp_PickStart5', PACKAGE = 'elves_temp', previous_start, previous_end, duration, productivity, threshold)
+    .Call('elves_PickStart5', PACKAGE = 'elves', previous_start, previous_end, duration, productivity, threshold)
+}
+
+BookElf4 <- function(theArrival, theDuration, threshold) {
+    .Call('elves_BookElf4', PACKAGE = 'elves', theArrival, theDuration, threshold)
 }
 
 BookElf5 <- function(arrival, duration, threshold) {
-    .Call('elves_temp_BookElf5', PACKAGE = 'elves_temp', arrival, duration, threshold)
+    .Call('elves_BookElf5', PACKAGE = 'elves', arrival, duration, threshold)
 }
 
 BookElf <- function(arrival, duration, threshold) {
-    .Call('elves_temp_BookElf', PACKAGE = 'elves_temp', arrival, duration, threshold)
+    .Call('elves_BookElf', PACKAGE = 'elves', arrival, duration, threshold)
 }
 

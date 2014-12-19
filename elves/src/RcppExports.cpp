@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // CalculateN
 double CalculateN(double t);
-RcppExport SEXP elves_temp_CalculateN(SEXP tSEXP) {
+RcppExport SEXP elves_CalculateN(SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -22,7 +22,7 @@ END_RCPP
 }
 // CalculateM
 double CalculateM(double t);
-RcppExport SEXP elves_temp_CalculateM(SEXP tSEXP) {
+RcppExport SEXP elves_CalculateM(SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -37,7 +37,7 @@ END_RCPP
 }
 // DateTimeAt900
 Datetime DateTimeAt900(Datetime date_time);
-RcppExport SEXP elves_temp_DateTimeAt900(SEXP date_timeSEXP) {
+RcppExport SEXP elves_DateTimeAt900(SEXP date_timeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -52,7 +52,7 @@ END_RCPP
 }
 // DateTimeNext900
 Datetime DateTimeNext900(Datetime dtime);
-RcppExport SEXP elves_temp_DateTimeNext900(SEXP dtimeSEXP) {
+RcppExport SEXP elves_DateTimeNext900(SEXP dtimeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -67,7 +67,7 @@ END_RCPP
 }
 // DateTimeAt1900
 Datetime DateTimeAt1900(Datetime date_time);
-RcppExport SEXP elves_temp_DateTimeAt1900(SEXP date_timeSEXP) {
+RcppExport SEXP elves_DateTimeAt1900(SEXP date_timeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -82,7 +82,7 @@ END_RCPP
 }
 // CalculateDaysDifference
 double CalculateDaysDifference(Datetime start, Datetime end);
-RcppExport SEXP elves_temp_CalculateDaysDifference(SEXP startSEXP, SEXP endSEXP) {
+RcppExport SEXP elves_CalculateDaysDifference(SEXP startSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -98,7 +98,7 @@ END_RCPP
 }
 // CalcHours
 double CalcHours(Datetime date_time);
-RcppExport SEXP elves_temp_CalcHours(SEXP date_timeSEXP) {
+RcppExport SEXP elves_CalcHours(SEXP date_timeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -113,7 +113,7 @@ END_RCPP
 }
 // CalculateSanctionedHours
 double CalculateSanctionedHours(Datetime start, double duration);
-RcppExport SEXP elves_temp_CalculateSanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
+RcppExport SEXP elves_CalculateSanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -129,7 +129,7 @@ END_RCPP
 }
 // CalculateUnsanctionedHours
 double CalculateUnsanctionedHours(Datetime start, double duration);
-RcppExport SEXP elves_temp_CalculateUnsanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
+RcppExport SEXP elves_CalculateUnsanctionedHours(SEXP startSEXP, SEXP durationSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -145,7 +145,7 @@ END_RCPP
 }
 // CalculateP
 double CalculateP(double p0, double n, double m);
-RcppExport SEXP elves_temp_CalculateP(SEXP p0SEXP, SEXP nSEXP, SEXP mSEXP) {
+RcppExport SEXP elves_CalculateP(SEXP p0SEXP, SEXP nSEXP, SEXP mSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -162,7 +162,7 @@ END_RCPP
 }
 // PickStart
 Datetime PickStart(Datetime earliest_start, int duration, double productivity, double threshold);
-RcppExport SEXP elves_temp_PickStart(SEXP earliest_startSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+RcppExport SEXP elves_PickStart(SEXP earliest_startSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -180,7 +180,7 @@ END_RCPP
 }
 // NextSanctionedDateTime
 Datetime NextSanctionedDateTime(Datetime date_time);
-RcppExport SEXP elves_temp_NextSanctionedDateTime(SEXP date_timeSEXP) {
+RcppExport SEXP elves_NextSanctionedDateTime(SEXP date_timeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -195,7 +195,7 @@ END_RCPP
 }
 // CalculateDateTimeAfterResting
 Datetime CalculateDateTimeAfterResting(Datetime previous_end, double rest_period);
-RcppExport SEXP elves_temp_CalculateDateTimeAfterResting(SEXP previous_endSEXP, SEXP rest_periodSEXP) {
+RcppExport SEXP elves_CalculateDateTimeAfterResting(SEXP previous_endSEXP, SEXP rest_periodSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -209,9 +209,28 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// pickStart4
+Datetime pickStart4(Datetime previousStart, Datetime previousEnd, int duration, double productivity, double threshold);
+RcppExport SEXP elves_pickStart4(SEXP previousStartSEXP, SEXP previousEndSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Datetime >::type previousStart(previousStartSEXP );
+        Rcpp::traits::input_parameter< Datetime >::type previousEnd(previousEndSEXP );
+        Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
+        Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
+        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
+        Datetime __result = pickStart4(previousStart, previousEnd, duration, productivity, threshold);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // PickStart5
 Datetime PickStart5(Datetime previous_start, Datetime previous_end, int duration, double productivity, double threshold);
-RcppExport SEXP elves_temp_PickStart5(SEXP previous_startSEXP, SEXP previous_endSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+RcppExport SEXP elves_PickStart5(SEXP previous_startSEXP, SEXP previous_endSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -228,9 +247,26 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// BookElf4
+DataFrame BookElf4(DatetimeVector& theArrival, NumericVector& theDuration, double threshold);
+RcppExport SEXP elves_BookElf4(SEXP theArrivalSEXP, SEXP theDurationSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< DatetimeVector& >::type theArrival(theArrivalSEXP );
+        Rcpp::traits::input_parameter< NumericVector& >::type theDuration(theDurationSEXP );
+        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
+        DataFrame __result = BookElf4(theArrival, theDuration, threshold);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // BookElf5
 DataFrame BookElf5(DatetimeVector& arrival, NumericVector& duration, double threshold);
-RcppExport SEXP elves_temp_BookElf5(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP elves_BookElf5(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -247,7 +283,7 @@ END_RCPP
 }
 // BookElf
 DataFrame BookElf(DatetimeVector& arrival, NumericVector& duration, double threshold);
-RcppExport SEXP elves_temp_BookElf(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP elves_BookElf(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
