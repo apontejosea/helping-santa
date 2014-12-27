@@ -26,7 +26,7 @@ read_toys <- function(file, ...) {
   toys <- fread(file, colClasses=c('integer', 'myDate', 'integer'), ...)
   setnames(toys, names(toys)[2], 'Arrival')
   toys[, ':='(Arrival=parse_date_time2(Arrival, "%Y %m %d %H %M"))]
-  setorder(toys, Duration)
+  # setorder(toys, Duration)
   return(toys)
 }
 
