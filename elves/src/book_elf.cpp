@@ -56,31 +56,29 @@ Datetime DateTimeNext900(Datetime dtime) {
 // [[Rcpp::export]]
 Datetime DateTimeAt1900(Datetime date_time) {
   double orig_time;
-  // BUG?: what about seconds? Would this be related to round-off differences?
   // added original time portion of date_time in seconds
   orig_time = date_time.getHours()*60*60 + date_time.getMinutes()*60 + date_time.getSeconds();
   return (date_time - orig_time + 19*60*60);
 }
 
-//does this work like this?
 // [[Rcpp::export]]
 double CalculateDaysDifference(Datetime start, Datetime end) {
-    Datetime new_end, new_start;
-    double days, origEndTime, origStartTime;
+  Datetime new_end, new_start;
+  double days, origEndTime, origStartTime;
 
-    days = 0;
-    //remove time portion
-    origEndTime   = end.getHours()*60 + end.getMinutes() + end.getSeconds()/60; //added seconds
-    new_end       = end - origEndTime*60;
-    origStartTime = start.getHours()*60 + start.getMinutes() + start.getSeconds()/60;
-    new_start     = start - origStartTime*60;
-    days          = (new_end - new_start)/60.0/60.0/24.0;
-    return days;
+  days = 0;
+  //remove time portion
+  origEndTime   = end.getHours()*60 + end.getMinutes() + end.getSeconds()/60; //added seconds
+  new_end       = end - origEndTime*60;
+  origStartTime = start.getHours()*60 + start.getMinutes() + start.getSeconds()/60;
+  new_start     = start - origStartTime*60;
+  days          = (new_end - new_start)/60.0/60.0/24.0;
+  return days;
 }
 
 // [[Rcpp::export]]
 double CalcHours(Datetime date_time) {
-    return date_time.getHours() + date_time.getMinutes()/60.0 + date_time.getSeconds()/60.0/60;//added seconds
+  return date_time.getHours() + date_time.getMinutes()/60.0 + date_time.getSeconds()/60.0/60;//added seconds
 }
 
 // [[Rcpp::export]]
@@ -130,25 +128,25 @@ Datetime NextSanctionedDateTime(Datetime date_time) {
 
 // [[Rcpp::export]]
 Datetime CalculateDateTimeAfterResting2(Datetime previous_end, double rest_period) {
-    Datetime datetime_after_resting,temp_next_sanctioned_datetime;
-  
-    if(9 <= CalcHours(previous_end) & CalcHours(previous_end) <= 19) {
-        temp_next_sanctioned_datetime = previous_end + 60;
-    }
-    else {
-        temp_next_sanctioned_datetime = DateTimeNext900(previous_end);
-    }
-  
-    datetime_after_resting = temp_next_sanctioned_datetime +
-                             ((int)(rest_period/10))*24*60*60 +
-                             (fmod(rest_period, 10.0)*60.0*60.0);
-    return NextSanctionedDateTime(datetime_after_resting);
+  Datetime datetime_after_resting,temp_next_sanctioned_datetime;
+
+  if(9 <= CalcHours(previous_end) & CalcHours(previous_end) <= 19) {
+    temp_next_sanctioned_datetime = previous_end + 60;
+  }
+  else {
+    temp_next_sanctioned_datetime = DateTimeNext900(previous_end);
+  }
+
+  datetime_after_resting = temp_next_sanctioned_datetime +
+                           ((int)(rest_period/10))*24*60*60 +
+                           (fmod(rest_period, 10.0)*60.0*60.0);
+  return NextSanctionedDateTime(datetime_after_resting);
 }
 
 
 // [[Rcpp::export]]
 Datetime PickStart(Datetime previous_start, Datetime previous_end, 
-                    int duration, double productivity, double threshold) {
+                   int duration, double productivity, double threshold) {
 
   Datetime s_e, s_a, previous_start_1900, temp_date_time;
   double rest_time_hr;
@@ -158,7 +156,7 @@ Datetime PickStart(Datetime previous_start, Datetime previous_end,
   
   rest_time_hr = std::max(0.0, (previous_end - previous_start_1900)/60/60);
   s_e          = CalculateDateTimeAfterResting2(previous_end, rest_time_hr);
-    return s_e;
+  return s_e;
 
  /* s_a          = DateTimeAt900(s_e);
   s_a          = DateTimeNext900(s_e);

@@ -18,8 +18,6 @@ toys_file_name     <- 'data/toys_rev2.csv'
 #=======================================================
 # Functions
 #=======================================================
-# TODO: Yara defined a way to sort and distribute toys more efficiently 
-# per month and size.  Need to incorporate her contributions.
 
 CreateSubmission <- function(schedule, file_name) {
   submission_data <- subset(schedule,T,c(ToyId, ElfId, start, end))
@@ -29,7 +27,6 @@ CreateSubmission <- function(schedule, file_name) {
   submission_data[,StartTime:=strftime(StartTime, '%Y %m %d %H %M')]
   write.csv(submission_data, file=file_name, row.names=F)
 }
-
 
 
 #=======================================================
@@ -43,12 +40,12 @@ print(system.time(toys       <- read_toys(toys_file_name, nrows=(n_toys+1))))
 # schedule       <- result$schedule
 # CreateSubmission(schedule, 'our_sub.csv')
 
-GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys, n_elves=n_elves, min=1, max=max(toys$ToyId), popSize=5, maxiter = 10, run=10, pmutation = 0.4)
+# GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys, n_elves=n_elves, min=1, max=max(toys$ToyId), popSize=5, maxiter = 10, run=10, pmutation = 0.4)
 
 
-print(system.time(opt_toys     <- distribute_toys(n_elves, toys[as.numeric(GA@solution)])))
-opt_toys<-opt_toys[order(opt_toys$ElfId,as.numeric(format(opt_toys$Arrival,"%m")),opt_toys$Duration)]
-print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
+# print(system.time(opt_toys     <- distribute_toys(n_elves, toys[as.numeric(GA@solution)])))
+# opt_toys<-opt_toys[order(opt_toys$ElfId,as.numeric(format(opt_toys$Arrival,"%m")),opt_toys$Duration)]
+# print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
 
 print(system.time(org_toys     <- distribute_toys(n_elves, toys)))
 org_toys<-org_toys[order(org_toys$ElfId,as.numeric(format(org_toys$Arrival,"%m")),org_toys$Duration)]
