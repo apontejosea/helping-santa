@@ -160,24 +160,6 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// PickStart
-Datetime PickStart(Datetime earliest_start, int duration, double productivity, double threshold);
-RcppExport SEXP elves_PickStart(SEXP earliest_startSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Datetime >::type earliest_start(earliest_startSEXP );
-        Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
-        Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
-        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        Datetime __result = PickStart(earliest_start, duration, productivity, threshold);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
 // NextSanctionedDateTime
 Datetime NextSanctionedDateTime(Datetime date_time);
 RcppExport SEXP elves_NextSanctionedDateTime(SEXP date_timeSEXP) {
@@ -209,28 +191,25 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// pickStart4
-Datetime pickStart4(Datetime previousStart, Datetime previousEnd, int duration, double productivity, double threshold);
-RcppExport SEXP elves_pickStart4(SEXP previousStartSEXP, SEXP previousEndSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+// CalculateDateTimeAfterResting2
+Datetime CalculateDateTimeAfterResting2(Datetime previous_end, double rest_period);
+RcppExport SEXP elves_CalculateDateTimeAfterResting2(SEXP previous_endSEXP, SEXP rest_periodSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Datetime >::type previousStart(previousStartSEXP );
-        Rcpp::traits::input_parameter< Datetime >::type previousEnd(previousEndSEXP );
-        Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
-        Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
-        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        Datetime __result = pickStart4(previousStart, previousEnd, duration, productivity, threshold);
+        Rcpp::traits::input_parameter< Datetime >::type previous_end(previous_endSEXP );
+        Rcpp::traits::input_parameter< double >::type rest_period(rest_periodSEXP );
+        Datetime __result = CalculateDateTimeAfterResting2(previous_end, rest_period);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// PickStart5
-Datetime PickStart5(Datetime previous_start, Datetime previous_end, int duration, double productivity, double threshold);
-RcppExport SEXP elves_PickStart5(SEXP previous_startSEXP, SEXP previous_endSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
+// PickStart
+Datetime PickStart(Datetime previous_start, Datetime previous_end, int duration, double productivity, double threshold);
+RcppExport SEXP elves_PickStart(SEXP previous_startSEXP, SEXP previous_endSEXP, SEXP durationSEXP, SEXP productivitySEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -240,41 +219,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< int >::type duration(durationSEXP );
         Rcpp::traits::input_parameter< double >::type productivity(productivitySEXP );
         Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        Datetime __result = PickStart5(previous_start, previous_end, duration, productivity, threshold);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// BookElf4
-DataFrame BookElf4(DatetimeVector& theArrival, NumericVector& theDuration, double threshold);
-RcppExport SEXP elves_BookElf4(SEXP theArrivalSEXP, SEXP theDurationSEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< DatetimeVector& >::type theArrival(theArrivalSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type theDuration(theDurationSEXP );
-        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        DataFrame __result = BookElf4(theArrival, theDuration, threshold);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// BookElf5
-DataFrame BookElf5(DatetimeVector& arrival, NumericVector& duration, double threshold);
-RcppExport SEXP elves_BookElf5(SEXP arrivalSEXP, SEXP durationSEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< DatetimeVector& >::type arrival(arrivalSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type duration(durationSEXP );
-        Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP );
-        DataFrame __result = BookElf5(arrival, duration, threshold);
+        Datetime __result = PickStart(previous_start, previous_end, duration, productivity, threshold);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
