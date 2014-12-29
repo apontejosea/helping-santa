@@ -1,4 +1,7 @@
-all: clean
+all: compile_elves compile_ga
+
+compile_elves: $(shell find elves -type f)
+	make clean
 	Rscript -e "library(methods); Rcpp::Rcpp.package.skeleton(name='elves_temp', code_files='elves/R/helpers.R', cpp_files='elves/src/book_elf.cpp', example_code=FALSE, force=T);"
 	cp elves_temp/src/RcppExports.cpp elves/src/
 	cp elves_temp/R/RcppExports.R elves/R/
@@ -8,6 +11,9 @@ all: clean
 	rm -r elves_temp
 	rm elves/R/*.bak
 	rm elves/src/*.bak
+
+compile_ga: $(shell find GA -type f)
+	R CMD INSTALL GA
 
 clean:
 	-rm elves/src/*.o elves/src/*.so
