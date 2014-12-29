@@ -13,7 +13,7 @@ Sys.setenv(TZ="UTC")
 n_elves            <- 900
 n_toys             <- 10000000 
 toys_file_name     <- 'data/toys_rev2.csv'
-# toys_file_name     <- 'data/toys_sample.csv'
+print(system.time(toys <- read_toys(toys_file_name, nrows=(n_toys+1))))
 
 #=======================================================
 # Functions
@@ -37,38 +37,31 @@ CreateSubmission <- function(schedule, file_name) {
 # }
 
 #=======================================================
-# Steps
+# Testing
 #=======================================================
-print(system.time(toys       <- read_toys(toys_file_name, nrows=(n_toys+1))))
-
 # S              <- toys$ToyId
 # result         <- CalculateObjective(S, toys, n_elves)
 # curr_objective <- result$objective
 # schedule       <- result$schedule
 
 
-# print(system.time(org_toys     <- distribute_toys(n_elves, toys)))
-# org_toys<-org_toys[order(org_toys$ElfId,as.numeric(format(org_toys$Arrival,"%m")),org_toys$Duration)]
-# print(system.time(org_schedule <- build_schedule_c(org_toys[ElfId==313,], .parallel=T)))
-
 # Optimization
-# GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys[order(toys$Duration),], n_elves=n_elves, min=1, 
-#          max=max(toys$ToyId), popSize=10, maxiter = 1, run=50, pmutation = 0.3)
+GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys[order(toys$Duration),], n_elves=n_elves, min=1, 
+         max=max(toys$ToyId), popSize=20, maxiter = 250, run=50, pmutation = 0.3)
 
-print(system.time(org_toys     <- distribute_toys(n_elves, toys[order(toys$Duration),])))
-print(system.time(org_schedule <- build_schedule_c(org_toys, .parallel=T)))
+# print(system.time(org_toys     <- distribute_toys(n_elves, toys[order(toys$Duration),])))
+# print(system.time(org_schedule <- build_schedule_c(org_toys, .parallel=T)))
 
+print(system.time(opt_toys     <- distribute_toys(n_elves, toys[order(as.numeric(GA@solution)),])))
+print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
 
-# print(system.time(opt_toys     <- distribute_toys(n_elves, toys[order(as.numeric(GA@solution)),])))
-# print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
+# rnd_ind <- sample(1:n_toys, size=n_toys, replace=F)
+# print(system.time(rnd_toys     <- distribute_toys(n_elves, toys[rnd_ind,])))
+# print(system.time(rnd_schedule <- build_schedule_c(rnd_toys, .parallel=T)))
 
-rnd_ind <- sample(1:n_toys, size=n_toys, replace=F)
-print(system.time(rnd_toys     <- distribute_toys(n_elves, toys[order(toys$Duration),])))
-print(system.time(rnd_schedule <- build_schedule_c(rnd_toys, .parallel=T)))
-
-CreateSubmission(org_schedule, 'org_sub.csv')
-CreateSubmission(rnd_schedule, 'rnd_sub.csv')
-# CreateSubmission(opt_schedule, 'opt_sub.csv')
+# CreateSubmission(org_schedule, 'org_sub.csv')
+# CreateSubmission(rnd_schedule, 'rnd_sub.csv')
+CreateSubmission(opt_schedule, 'opt_sub.csv')
 
 # PngIt(plot_duration(opt_schedule), 'toy_duration_opt.png')
 # PngIt(plot_toy_schedule(opt_schedule), 'overall_toy_schedule_opt.png')
