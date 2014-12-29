@@ -26,12 +26,13 @@ read_toys <- function(file, ...) {
   toys <- fread(file, colClasses=c('integer', 'myDate', 'integer'), ...)
   setnames(toys, names(toys)[2], 'Arrival')
   toys[, ':='(Arrival=parse_date_time2(Arrival, "%Y %m %d %H %M"))]
-  setorder(toys, Duration)
+  setorder(toys, ToyId)
   return(toys)
 }
 
 distribute_toys <- function(n_elves, toys) {
   toys[ , ':='(ElfId=(0:(nrow(toys)-1) %% n_elves + 1))]
+  toys
 }
 
 createCluster  <-  function(logfile = "/dev/null", export = NULL, lib = NULL) {
@@ -53,14 +54,18 @@ createCluster  <-  function(logfile = "/dev/null", export = NULL, lib = NULL) {
 build_schedule_c <- function(toys, threshold=0, .parallel=FALSE) {
   require(plyr)
   cl  <- createCluster(lib=list('Rcpp'))
+  toys[, Month:=as.numeric(strftime(Arrival, '%m'))]
+  setorder(toys, ElfId, Month, Duration)
+  toys <- subset(toys, T, -Month)
   res <- ddply(toys, .(ElfId), 
                .fun=function(X) { 
-                 BookElf(X$Arrival, X$Duration, threshold=threshold) 
+                 return(data.frame(ToyId=X$ToyId, 
+                                   BookElf(X$Arrival, X$Duration, threshold=threshold)))
                }, 
                .parallel=.parallel)
   stopCluster(cl)
-  res <- cbind(toys, res[,-1])
-  res[order(res$ElfId, res$start),]
+  setorder(toys, ToyId)
+  res <- cbind(toys, res[order(res$ToyId), -c(1,2)])
   res
 }
 
