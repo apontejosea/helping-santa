@@ -37,6 +37,67 @@ CreateSubmission <- function(schedule, file_name) {
 # }
 
 #=======================================================
+# Functions for new GA
+#=======================================================
+ComputeScore <- function(end_vector){
+    ts = (as.numeric(max(end_vector)-as.numeric(as.POSIXct('2014-01-01')))/60)
+    score2 = ts*log(1+n_elves)
+    print(score2)
+    return(score2)
+}
+
+#GA (Still not sure if it should be here or inside cpp)
+#To Do: Save best schedule and Score
+GA <- function(orig_schedule){
+    #variable declarations
+    current_iteration   = 1
+    max_iteration       = 10
+    current_score       = ComputeScore(orig_schedule$end)
+    current_schedule<-orig_schedule[order(orig_schedule$ElfId)]
+    duration_sum = sum(current_schedule$duration)
+    print(duration_sum)
+    
+    #CreateSubmission(current_schedule, 'org_sub.csv')
+    score_to_beat       = 1270117889 - (1270117889 * .10)
+    
+    while (current_score >= score_to_beat && current_iteration <= max_iteration){
+        #save the best solution so far
+        #best_schedule = current_schedule
+        current_iteration        = current_iteration + 1
+        current_mutated_schedule = data.table(MutationByP2(current_schedule$ElfId,current_schedule$ToyId,current_schedule$p,current_schedule$Duration,current_schedule$Arrival))
+        current_schedule         = build_schedule_c(current_mutated_schedule, .parallel=T)
+        current_schedule<-current_schedule[order(current_schedule$ElfId)]
+        current_score            = ComputeScore(current_schedule$end)
+        duration_sum = sum(current_schedule$duration)
+        print(duration_sum)
+    }
+    return(current_score)
+}
+
+#=======================================================
+# Steps for new GA
+#=======================================================
+#Get first solution
+print(system.time(sel_toys   <- distribute_toys(n_elves, toys)))
+#write.csv(sel_toys, file='toy_out.csv', row.names=F)
+#Toys need to be sorted by ElfId so next sorting can work
+sel_toys<-sel_toys[order(sel_toys$ElfId,as.numeric(format(sel_toys$Arrival,"%m")),sel_toys$Duration)]
+sep_factor = 10
+#sel_toys<-data.table(sort_toys(sel_toys$ElfId,sel_toys$ToyId,sel_toys$Duration,sel_toys$Arrival,sel_toys$BigToy,sep_factor))
+sel_toys<-sort_toys(sel_toys, .parallel=T)
+#write.csv(sel_toys, file='toy_out_sorted.csv', row.names=F)
+#print(head(sel_toys))
+
+#print(system.time(schedule_c <- build_schedule_c(sel_toys, .parallel=T)))
+#current_score            = ComputeScore(schedule_c$end)
+#print(current_score)
+
+#Call GA
+#print(system.time(GA(schedule_c)))
+#GA(schedule_c)
+
+
+#=======================================================
 # Testing
 #=======================================================
 # S              <- toys$ToyId
@@ -44,16 +105,33 @@ CreateSubmission <- function(schedule, file_name) {
 # curr_objective <- result$objective
 # schedule       <- result$schedule
 
+#Get initial solution
+#print(system.time(sel_toys   <- distribute_toys(n_elves, toys)))
+#sel_toys<-sel_toys[order(sel_toys$ElfId,as.numeric(format(sel_toys$Arrival,"%m")),sel_toys$Duration)]
+#sel_toys <- subset(sel_toys,T,-ElfId)
+
 
 # Optimization
-GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys[order(toys$Duration),], n_elves=n_elves, min=1, 
-         max=max(toys$ToyId), popSize=20, maxiter = 250, run=50, pmutation = 0.3)
+#suggestions = vector of solution string to be included in original population
+#run = number of generations without improvement
+#program runs aprox popSize*maxiter*2 mins
 
-# print(system.time(org_toys     <- distribute_toys(n_elves, toys[order(toys$Duration),])))
-# print(system.time(org_schedule <- build_schedule_c(org_toys, .parallel=T)))
+#GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys[order(as.numeric(format(toys$Arrival,"%m")),toys$Duration),], n_elves=n_elves, min=1,
+#       max=max(toys$ToyId), popSize=10, maxiter = 1, run=1, pmutation = 0.5,pcrossover = 0.9, elitism = .2)
 
-print(system.time(opt_toys     <- distribute_toys(n_elves, toys[order(as.numeric(GA@solution)),])))
-print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
+
+#GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys[order(as.numeric(format(toys$Arrival,"%m")),toys$Duration),], n_elves=n_elves, min=1,
+#         max=max(toys$ToyId), popSize=10, maxiter = 1, run=1, pmutation = 0.5,pcrossover = 0.9, elitism = .2, suggestions = sel_toys$ToyId)
+#GA <- ga(type = 'permutation', fitness = CalculateFitness, toys=toys, n_elves=n_elves, min=1,
+#max=max(toys$ToyId), popSize=50, maxiter = 5, run=3, pmutation = 0.1,pcrossover = 0.7, elitism = .6, suggestions = sel_toys$ToyId)
+#sel_toys$ElfId,as.numeric(format(sel_toys$Arrival,"%m")),sel_toys$Duration
+
+
+#print(system.time(org_toys     <- distribute_toys(n_elves, toys[order(toys$Duration),])))
+#print(system.time(org_schedule <- build_schedule_c(org_toys, .parallel=T)))
+
+#print(system.time(opt_toys     <- distribute_toys(n_elves, toys[order(as.numeric(GA@solution)),])))
+#print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
 
 # rnd_ind <- sample(1:n_toys, size=n_toys, replace=F)
 # print(system.time(rnd_toys     <- distribute_toys(n_elves, toys[rnd_ind,])))
@@ -61,7 +139,11 @@ print(system.time(opt_schedule <- build_schedule_c(opt_toys, .parallel=T)))
 
 # CreateSubmission(org_schedule, 'org_sub.csv')
 # CreateSubmission(rnd_schedule, 'rnd_sub.csv')
-CreateSubmission(opt_schedule, 'opt_sub.csv')
+#CreateSubmission(opt_schedule, 'opt_sub.csv')
+#last_subset <- 3
+# Uncomment to generate graphs
+#PngIt(plot_elf_schedule(tail(opt_schedule, last_subset)),
+#      'overall_elf_schedule_c.png')
 
 # PngIt(plot_duration(opt_schedule), 'toy_duration_opt.png')
 # PngIt(plot_toy_schedule(opt_schedule), 'overall_toy_schedule_opt.png')

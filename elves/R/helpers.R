@@ -31,8 +31,11 @@ read_toys <- function(file, ...) {
 }
 
 distribute_toys <- function(n_elves, toys) {
-  toys[ , ':='(ElfId=(0:(nrow(toys)-1) %% n_elves + 1))]
-  toys
+    #toys[ , ':='(ElfId=(0:(nrow(toys)-1) %% n_elves + 1))]
+    toys[, `:=`(BigToy = Duration > 1000)]
+    toys[, `:=`(ElfId = (0:(nrow(toys[BigToy,]) - 1)%%n_elves + 1))]
+    toys[, `:=`(ElfId = (0:(nrow(toys[!BigToy,]) - 1)%%n_elves + 1))]
+    return(toys)
 }
 
 createCluster  <-  function(logfile = "/dev/null", export = NULL, lib = NULL) {
@@ -51,12 +54,28 @@ createCluster  <-  function(logfile = "/dev/null", export = NULL, lib = NULL) {
   return(cl)
 }
 
+#Trying this out
+sort_toys <- function(toys, sep_factor=5, .parallel=FALSE) {
+    require(plyr)
+    cl  <- createCluster(lib=list('Rcpp'))
+    
+    res <- ddply(toys, .(ElfId),
+    .fun=function(X) {
+        return(data.frame(ToyId=X$ToyId,
+        SortToys2(X$Arrival, X$Duration, X$BigToy, sep_factor=sep_factor)))
+    },
+    .parallel=.parallel)
+    stopCluster(cl)
+    res <- cbind(toys, res[order(res$ToyId), -c(1,2)])
+    res
+}
+
 build_schedule_c <- function(toys, threshold=0, .parallel=FALSE) {
   require(plyr)
   cl  <- createCluster(lib=list('Rcpp'))
-  toys[, Month:=as.numeric(strftime(Arrival, '%m'))]
-  setorder(toys, ElfId, Month, Duration)
-  toys <- subset(toys, T, -Month)
+  #toys[, Month:=as.numeric(strftime(Arrival, '%m'))]
+  #setorder(toys, ElfId, Month, Duration)
+  #toys <- subset(toys, T, -Month)
   res <- ddply(toys, .(ElfId), 
                .fun=function(X) { 
                  return(data.frame(ToyId=X$ToyId, 
@@ -76,9 +95,11 @@ CalculateObjective <- function(S, toys, n_elves) {
   print(system.time(sel_toys   <- distribute_toys(n_elves, toys[S])))
   print(system.time(schedule_c <- build_schedule_c(sel_toys, .parallel=T)))
   tf      <- (as.numeric(max(schedule_c$end))-as.numeric(as.POSIXct('2014-01-01')))/60
+  print(tf*log(n_elves+1))
   return(list(objective=tf*log(n_elves+1), schedule=schedule_c) )
 }
 
 CalculateFitness <- function(S, toys, n_elves) { 
   1/CalculateObjective(S, toys, n_elves)$objective 
 }
+
