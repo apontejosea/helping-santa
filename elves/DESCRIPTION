@@ -8,6 +8,6 @@ Maintainer: Jose A. Aponte <jose.aponte@pragmaanalytics.com>
 Description: Elves helping Santa all the way!
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.11.3)
-Depends: data.table, lubridate, doSNOW
+Depends: data.table, lubridate, doSNOW, gtable
 Suggests: ggplot2
 LinkingTo: Rcpp
