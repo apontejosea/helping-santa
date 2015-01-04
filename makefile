@@ -21,6 +21,12 @@ clean:
 run:
 	Rscript build_schedule_test.R
 
+runopt:
+	Rscript elf_inner_opt.R
+
+graph:
+	Rscript graph.R
+
 test:
 	Rscript build_schedule_test.R
 	mv opt_sub.csv HelpingSantasHelpers/opt_sub.csv

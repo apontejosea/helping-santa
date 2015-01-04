@@ -1,4 +1,5 @@
 require(ggplot2)
+require(scales)
 theme_set(theme_linedraw(12))
 
 PdfIt <- function(graph, file) {
@@ -59,39 +60,39 @@ plot_elf_schedule <- function(schedule) {
                            bot=(min(schedule$ElfId)-0.5), top=(max(schedule$ElfId)+0.5))
   ggplot(schedule) +
     geom_rect(aes(xmin=start, xmax=end, ymin=bot, ymax=top), fill='blue', alpha=0.3, data=time_frames) +
-    geom_segment(aes(x=start, xend=end, y=ElfId, yend=ElfId, color=as.factor(ToyId), size=1.5)) + 
+    geom_segment(aes(x=start, xend=end, y=p, yend=p, color=as.factor(ToyId), size=1.5)) + 
     theme(panel.grid.major.x=element_line(size=1)) +
     scale_y_reverse() + scale_color_hue('accent') + scale_x_datetime(breaks='1 day') +
+    facet_grid(ElfId~.) + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")
 }
 
 plot_elf_p_trend  <- function(schedule) {
-  require(ggplot2)  
+  require(ggplot2)
   date_range <- range(trunc(schedule$start, 'day'))
   all_dates  <- seq(date_range[1], date_range[2], 'days')
-  time_frames<- data.frame(start=all_dates+9*60*60, end=all_dates+19*60*60, 
+  time_frames<- data.frame(start=all_dates+9*60*60, end=all_dates+19*60*60,
                            bot=(min(schedule$ElfId)-1), top=(max(schedule$ElfId)+1))
-  ggplot(schedule) + 
-    geom_rect(aes(xmin=start, xmax=end, ymin=bot, ymax=top), fill='blue', alpha=0.3, data=time_frames) +
-    geom_segment(aes(x=start, xend=end, y=p, yend=p, color=as.factor(ToyId), size=0.5)) + 
+  ggplot(schedule) +
+    geom_rect(aes(xmin=start, xmax=end, ymin=bot, ymax=top), fill='blue', alpha=0.8, data=time_frames) +
+    geom_segment(aes(x=start, xend=end, y=p, yend=p, color=as.factor(ToyId)), size=1) +
     theme(panel.grid.major.x=element_line(size=1)) +
-    scale_color_hue('accent') + 
+    scale_color_hue('accent') +
     facet_grid(ElfId~.) + scale_color_hue('accent') +
     theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")
 }
 
 # Overall toy schedule
-plot_toy_schedule <- function(schedule)  {
+plot_toy_schedule <- function(schedule) {
   require(ggplot2)
   date_range <- range(trunc(schedule$start, 'day'))
   all_dates  <- seq(date_range[1], date_range[2], 'days')
-  time_frames<- data.frame(start=all_dates+9*60*60, end=all_dates+19*60*60, 
+  time_frames<- data.frame(start=all_dates+9*60*60, end=all_dates+19*60*60,
                            bot=(min(schedule$ToyId)-1), top=(max(schedule$ToyId)+1))
   ggplot(schedule) +
     geom_rect(aes(xmin=start, xmax=end, ymin=bot, ymax=top), fill='blue', alpha=0.3, data=time_frames) +
-    geom_segment(aes(x=Arrival, xend=Arrival+Duration*60, y=ToyId, yend=ToyId, color=as.factor(ElfId), size=1.5)) + 
+    geom_segment(aes(x=Arrival, xend=Arrival+Duration*60, y=ToyId, yend=ToyId, color=as.factor(ElfId), size=1.5)) +
     theme(panel.grid.major.x=element_line(size=1)) +
     scale_y_reverse() + scale_color_hue('accent') + scale_x_datetime(breaks='1 day') +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")
+    theme(axis.text.x=element_text(angle=90, hjust=1), legend.position="none")
 }
-

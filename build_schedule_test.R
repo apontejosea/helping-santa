@@ -7,12 +7,28 @@ library(elves)
 options(width=600)
 Sys.setenv(TZ="UTC")
 
+
+
+
+
+## Inter-elves optimization
+#   select an elf that took very little time to complete
+#   select point with highest productivity
+#   assign toy of unproductive elf to productive elf
+
+
+
+# TODO: Plot toy lags (how long a toy has to wait in the waiting line)
+
+
+
 #=======================================================
 # Input
 #=======================================================
 n_elves            <- 2
 n_toys             <- 80 
 toys_file_name     <- 'data/toys_small_sample.csv'
+# toys_file_name     <- 'data/toys_rev2.csv'
 print(system.time(toys <- read_toys(toys_file_name, nrows=(n_toys+1))))
 
 #=======================================================
@@ -43,6 +59,8 @@ SelectWeightedRand <- function(val, weight=val) {
 # result         <- CalculateObjective(S, toys, n_elves)
 # curr_objective <- result$objective
 # schedule       <- result$schedule
+
+
 
 
 # Optimization
