@@ -90,7 +90,7 @@ double CalculateSanctionedHours(Datetime start, double duration) {
   start_hr = CalcHours(start);
   sanctioned_hours = CalculateN(CalcHours(expected_end)) - 
   CalculateN(CalcHours(start)) +
-  CalculateDaysDifference(start, expected_end)*10; //revise CalculateDaysDifference()
+  CalculateDaysDifference(start, expected_end)*10;
   return sanctioned_hours;
 }
 
@@ -103,7 +103,7 @@ double CalculateUnsanctionedHours(Datetime start, double duration) {
   expected_end_hr    = CalcHours(expected_end);
   start_hr           = CalcHours(start);
   unsanctioned_hours = CalculateM(expected_end_hr) - CalculateM(start_hr) +
-  CalculateDaysDifference(start, expected_end)*14; //revise CalculateDaysDifference()
+  CalculateDaysDifference(start, expected_end)*14;
   return unsanctioned_hours;
 }
 
@@ -136,4 +136,23 @@ Datetime CalculateDateTimeAfterResting(Datetime previous_end, double rest_period
 // [[Rcpp::export]]
 double CalculateElfDurationMinutes(double duration, double productivity) {
   return std::ceil(duration/productivity);
+}
+
+// [[Rcpp::export]]
+Datetime PickStart(Datetime previous_start, Datetime previous_end, 
+                   int duration, double productivity) {
+
+  Datetime s_e, s_a, previous_start_1900, temp_date_time;
+  double rest_time_hr;
+
+  previous_start_1900 = DateTimeAt1900(previous_start);
+  
+  rest_time_hr = std::max(0.0, (previous_end - previous_start_1900)/60/60);
+  s_e          = CalculateDateTimeAfterResting(previous_end, rest_time_hr)+60;
+
+  if(CalculateUnsanctionedHours(s_e , duration) > 0) {
+    s_e        = DateTimeNext900(s_e);
+  }
+
+  return s_e;
 }

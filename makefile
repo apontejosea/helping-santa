@@ -1,4 +1,4 @@
-all: compile_elves compile_ga
+all: compile_elves
 
 compile_elves: $(shell find elves -type f)
 	make clean
@@ -12,8 +12,8 @@ compile_elves: $(shell find elves -type f)
 	rm elves/R/*.bak
 	rm elves/src/*.bak
 
-compile_ga: $(shell find GA -type f)
-	R CMD INSTALL GA
+#compile_ga: $(shell find GA -type f)
+#	R CMD INSTALL GA
 
 clean:
 	-rm elves/src/*.o elves/src/*.so
